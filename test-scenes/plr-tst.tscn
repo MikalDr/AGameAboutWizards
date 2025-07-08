@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://8ni8mm6ejsa1"]
+
+[ext_resource type="Script" uid="uid://d3q7y625ctsbb" path="res://test-scenes/MultiPlrTestScene.cs" id="1_25t42"]
+[ext_resource type="PackedScene" uid="uid://c78isorfyge6a" path="res://player/player.tscn" id="2_ryya2"]
+
+[node name="multiplr" type="Node2D" node_paths=PackedStringArray("_hostBtn", "_joinBtn")]
+script = ExtResource("1_25t42")
+_playerScene = ExtResource("2_ryya2")
+_hostBtn = NodePath("host")
+_joinBtn = NodePath("join")
+
+[node name="host" type="Button" parent="."]
+offset_left = 410.0
+offset_top = 236.0
+offset_right = 453.0
+offset_bottom = 267.0
+text = "host"
+metadata/_edit_use_anchors_ = true
+
+[node name="join" type="Button" parent="."]
+offset_left = 463.0
+offset_top = 237.0
+offset_right = 506.0
+offset_bottom = 268.0
+text = "join"
+metadata/_edit_use_anchors_ = true
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://c78isorfyge6a")
+spawn_path = NodePath("..")
