@@ -5,7 +5,7 @@ public partial class PlayerMovement : CharacterBody2D
 	[Export]
 	private float MaxSpeed = 400f;
 	[Export]
-	private float Acceleration = 3000f;
+	private float Acceleration = 5000f;
 
 	private AnimatedSprite2D _anim;
 
@@ -25,13 +25,22 @@ public partial class PlayerMovement : CharacterBody2D
 		if (IsMultiplayerAuthority())
 		{
 			Vector2 inputDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-
+			
+			// Movement Code
 			if (inputDirection != Vector2.Zero)
 			{
 				inputDirection = inputDirection.Normalized();
 				Velocity = Velocity.MoveToward(inputDirection * MaxSpeed, Acceleration * (float)delta);
-
-				_anim.Animation = "run";
+				
+				if (inputDirection.Y != 0) 
+				{
+					_anim.Animation = inputDirection.Y > 0 ? "run" : "runUp";
+				}
+				else if (inputDirection.X != 0)
+				{
+					_anim.Animation = "runSide";
+					_anim.FlipH = inputDirection.X < 0;
+				}
 
 				if (!_anim.IsPlaying())
 					_anim.Play();
