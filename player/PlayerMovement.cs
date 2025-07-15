@@ -26,6 +26,12 @@ public partial class PlayerMovement : CharacterBody2D
 		{
 			Vector2 inputDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 			
+			// Spell Logic
+			if (Input.IsActionJustPressed("cast"))
+			{
+				GD.Print("You cast a spell!");
+			}
+			
 			// Movement Code
 			if (inputDirection != Vector2.Zero)
 			{
