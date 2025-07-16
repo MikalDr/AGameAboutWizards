@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 public partial class PlayerMovement : CharacterBody2D
 {
@@ -6,8 +7,15 @@ public partial class PlayerMovement : CharacterBody2D
 	private float MaxSpeed = 400f;
 	[Export]
 	private float Acceleration = 5000f;
-
+	
+	private int Health = 100;
+	
 	private AnimatedSprite2D _anim;
+
+	public void takeDamage(int amount)
+	{
+		Health = Math.Max(0, Health - amount);
+	}
 
 	public override void _EnterTree()
 	{
