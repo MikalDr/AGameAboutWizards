@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://hknksqqjge7i"]
+
+[ext_resource type="Script" uid="uid://cbr4u2krm1fhu" path="res://ui/volume-bar/VolumeBar.cs" id="1_5yjtt"]
+
+[node name="VolumeBar" type="HBoxContainer" node_paths=PackedStringArray("_volumeLabel", "_volumeBar", "_volumeValue")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_5yjtt")
+_volumeLabel = NodePath("Label")
+_volumeBar = NodePath("HScrollBar")
+_volumeValue = NodePath("Value")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HScrollBar" type="HScrollBar" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Value" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://34mfnxqyvf8m"]
+
+[ext_resource type="Script" uid="uid://chm7hyfo0a3e" path="res://services/volume-service/VolumeService.cs" id="1_3ea1h"]
+
+[node name="VolumeService" type="Node"]
+script = ExtResource("1_3ea1h")
