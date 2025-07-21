@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://o1vuv5k8tnjc"]
+
+[ext_resource type="Script" uid="uid://f2um42vq65oo" path="res://spells/magic-orb/MagicOrb.cs" id="1_h52bs"]
+[ext_resource type="Texture2D" uid="uid://0jvdhneykrbh" path="res://sprites/MagicOrb-Sheet.png" id="1_jkyac"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h52bs"]
+atlas = ExtResource("1_jkyac")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jw8te"]
+atlas = ExtResource("1_jkyac")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x4vhn"]
+atlas = ExtResource("1_jkyac")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tspuu"]
+atlas = ExtResource("1_jkyac")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nwdkl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h52bs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jw8te")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x4vhn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tspuu")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jw8te"]
+size = Vector2(31.4286, 14)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h52bs"]
+radius = 3.0
+
+[node name="MagicOrb" type="CharacterBody2D"]
+script = ExtResource("1_h52bs")
+_audioLength = 10.0
+SpellSpeedMax = 100.0
+SpellAcceleration = 1.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_nwdkl")
+frame_progress = 0.554706
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_jw8te")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("RectangleShape2D_jw8te")
+
+[node name="SpellAudio" type="AudioStreamPlayer2D" parent="."]
+bus = &"spell"
+
+[node name="SpellShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_h52bs")
