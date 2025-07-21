@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://vlrdbhqog0yh"]
+
+[ext_resource type="Script" uid="uid://b7x3x8o0ve5vy" path="res://spells/Spell.cs" id="1_bj7qm"]
+[ext_resource type="Texture2D" uid="uid://0x0infv713gy" path="res://icon.svg" id="2_507av"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bir3f"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_507av")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_507av"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_507av"]
+radius = 3.0
+
+[node name="Spell" type="CharacterBody2D"]
+script = ExtResource("1_bj7qm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_bir3f")
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+scale = Vector2(7, 7)
+shape = SubResource("RectangleShape2D_507av")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+scale = Vector2(7, 7)
+shape = SubResource("RectangleShape2D_507av")
+
+[node name="SpellAudio" type="AudioStreamPlayer2D" parent="."]
+bus = &"spell"
+
+[node name="SpellShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_507av")
