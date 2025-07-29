@@ -1,7 +1,13 @@
-[gd_scene load_steps=32 format=3 uid="uid://c78isorfyge6a"]
+[gd_scene load_steps=34 format=3 uid="uid://c78isorfyge6a"]
 
 [ext_resource type="Script" uid="uid://bplgsac67k3j1" path="res://player/PlayerMovement.cs" id="1_rkbax"]
+[ext_resource type="Shader" uid="uid://qxo1w80i8yww" path="res://player/DashFlash.gdshader" id="2_g1dw6"]
 [ext_resource type="Texture2D" uid="uid://b52ait0my3mch" path="res://player/WizardTest-Sheet.png" id="2_rkbax"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yw30f"]
+shader = ExtResource("2_g1dw6")
+shader_parameter/flash_white = false
+shader_parameter/flash_red = false
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rkbax"]
 atlas = ExtResource("2_rkbax")
@@ -236,6 +242,7 @@ Acceleration = 1200.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
+material = SubResource("ShaderMaterial_yw30f")
 sprite_frames = SubResource("SpriteFrames_2ieo8")
 animation = &"runUp"
 

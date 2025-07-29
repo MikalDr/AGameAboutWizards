@@ -8,11 +8,13 @@ public partial class PlayerMovement : CharacterBody2D
 	[Export]
 	private float DashSpeed = 800;
 	[Export]
-	private float DashDuration = 0.1f;
+	private float DashDuration = 0.2f;
 	[Export]
 	private float DashCooldown = 2f;
 	[Export]
 	private float Acceleration = 5000f;
+	[Export]
+	private float DamageTime = 0.1f;
 	
 	private bool isDashing = false;
 	
@@ -20,11 +22,15 @@ public partial class PlayerMovement : CharacterBody2D
 	
 	private Timer dashCooldownTimer;
 	private Timer dashDurationTimer;
+	private Timer damageTimer;
 	
 	private AnimatedSprite2D _anim;
+	private ShaderMaterial _flashMaterial;
 
 	public void takeDamage(int amount)
 	{
+		_flashMaterial.SetShaderParameter("flash_red", true);
+		damageTimer.Start(DamageTime);
 		Health = Math.Max(0, Health - amount);
 	}
 
@@ -38,10 +44,13 @@ public partial class PlayerMovement : CharacterBody2D
 		// Animation
 		_anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_anim.Animation = "idle";
+		_flashMaterial = (ShaderMaterial)_anim.Material;
 		
 		// Dash Timers
 		dashCooldownTimer = GetNode<Timer>("DashCooldown");
 		dashDurationTimer = GetNode<Timer>("DashDuration");
+		damageTimer = new Timer();
+		damageTimer.Timeout += OnTakeDamage;
 		dashCooldownTimer.Timeout += OnDashCooldownTimeout;
 		dashDurationTimer.Timeout += OnDashDurationTimeout;
 	}
@@ -64,24 +73,24 @@ public partial class PlayerMovement : CharacterBody2D
 			if (inputDirection != Vector2.Zero)
 			{
 				inputDirection = inputDirection.Normalized();
-				//Velocity = Velocity.MoveToward(inputDirection * MaxSpeed, Acceleration * (float)delta);
 				
 				if ((Input.IsActionJustPressed("dash") && dashCooldownTimer.IsStopped()))
 				{
 					dashCooldownTimer.Start(DashCooldown);
 					dashDurationTimer.Start(DashDuration);
 					Velocity = DashSpeed * inputDirection;
-					_anim.
 					isDashing = true;
 				} 
 				else if (isDashing)
 				{
+					_flashMaterial.SetShaderParameter("flash_white", true);
 					if (dashDurationTimer.IsStopped())
 					{
 						isDashing = false; 
 					}
 				}
 				 else {
+					_flashMaterial.SetShaderParameter("flash_white", false);
 					Velocity = Velocity.MoveToward(inputDirection * MaxSpeed, Acceleration * (float)delta);
 				}
 				
@@ -115,5 +124,8 @@ public partial class PlayerMovement : CharacterBody2D
 	}
 	private void OnDashCooldownTimeout() {
 		
+	}
+	private void OnTakeDamage() {
+		_flashMaterial.SetShaderParameter("flash_red", false);
 	}
 }
