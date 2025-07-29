@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://c78isorfyge6a"]
+[gd_scene load_steps=32 format=3 uid="uid://c78isorfyge6a"]
 
 [ext_resource type="Script" uid="uid://bplgsac67k3j1" path="res://player/PlayerMovement.cs" id="1_rkbax"]
 [ext_resource type="Texture2D" uid="uid://b52ait0my3mch" path="res://player/WizardTest-Sheet.png" id="2_rkbax"]
@@ -226,6 +226,10 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rkbax"]
+radius = 9.0
+height = 24.0
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_rkbax")
 Acceleration = 1200.0
@@ -242,3 +246,16 @@ replication_config = SubResource("SceneReplicationConfig_rkbax")
 zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 23)
+shape = SubResource("CapsuleShape2D_rkbax")
+
+[node name="DashDuration" type="Timer" parent="."]
+one_shot = true
+
+[node name="DashCooldown" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="DashDuration" to="." method="_on_dash_duration_timeout"]
+[connection signal="timeout" from="DashCooldown" to="." method="_on_dash_cooldown_timeout"]

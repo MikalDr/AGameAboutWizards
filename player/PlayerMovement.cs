@@ -6,9 +6,20 @@ public partial class PlayerMovement : CharacterBody2D
 	[Export]
 	private float MaxSpeed = 400f;
 	[Export]
+	private float DashSpeed = 800;
+	[Export]
+	private float DashDuration = 0.1f;
+	[Export]
+	private float DashCooldown = 2f;
+	[Export]
 	private float Acceleration = 5000f;
 	
+	private bool isDashing = false;
+	
 	private int Health = 100;
+	
+	private Timer dashCooldownTimer;
+	private Timer dashDurationTimer;
 	
 	private AnimatedSprite2D _anim;
 
@@ -24,10 +35,19 @@ public partial class PlayerMovement : CharacterBody2D
 
 	public override void _Ready()
 	{
+		// Animation
 		_anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_anim.Animation = "idle";
+		
+		// Dash Timers
+		dashCooldownTimer = GetNode<Timer>("DashCooldown");
+		dashDurationTimer = GetNode<Timer>("DashDuration");
+		dashCooldownTimer.Timeout += OnDashCooldownTimeout;
+		dashDurationTimer.Timeout += OnDashDurationTimeout;
 	}
-
+	
+	
+	
 	public override void _Process(double delta)
 	{
 		if (IsMultiplayerAuthority())
@@ -44,7 +64,26 @@ public partial class PlayerMovement : CharacterBody2D
 			if (inputDirection != Vector2.Zero)
 			{
 				inputDirection = inputDirection.Normalized();
-				Velocity = Velocity.MoveToward(inputDirection * MaxSpeed, Acceleration * (float)delta);
+				//Velocity = Velocity.MoveToward(inputDirection * MaxSpeed, Acceleration * (float)delta);
+				
+				if ((Input.IsActionJustPressed("dash") && dashCooldownTimer.IsStopped()))
+				{
+					dashCooldownTimer.Start(DashCooldown);
+					dashDurationTimer.Start(DashDuration);
+					Velocity = DashSpeed * inputDirection;
+					_anim.
+					isDashing = true;
+				} 
+				else if (isDashing)
+				{
+					if (dashDurationTimer.IsStopped())
+					{
+						isDashing = false; 
+					}
+				}
+				 else {
+					Velocity = Velocity.MoveToward(inputDirection * MaxSpeed, Acceleration * (float)delta);
+				}
 				
 				if (inputDirection.Y != 0) 
 				{
@@ -69,5 +108,12 @@ public partial class PlayerMovement : CharacterBody2D
 		}
 		
 		MoveAndSlide();
+	}
+		
+	private void OnDashDurationTimeout() {
+		
+	}
+	private void OnDashCooldownTimeout() {
+		
 	}
 }
