@@ -1,0 +1,77 @@
+[gd_scene load_steps=12 format=3 uid="uid://b4gqq4e04334g"]
+
+[ext_resource type="Texture2D" uid="uid://cyewanf18rf3c" path="res://player/DustExplosion.png" id="1_jv6h0"]
+[ext_resource type="Script" uid="uid://dsg61cvahy6r0" path="res://player/DashSmoke.cs" id="2_7no5f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7no5f"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o55bc"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ta2jp"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ux470"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8hsk8"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6bba"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arjvd"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0pfhq"]
+atlas = ExtResource("1_jv6h0")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_voysa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7no5f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o55bc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ta2jp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ux470")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8hsk8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m6bba")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arjvd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0pfhq")
+}],
+"loop": false,
+"name": &"smoke",
+"speed": 32.0
+}]
+
+[node name="DashSmoke" type="AnimatedSprite2D"]
+modulate = Color(1, 1, 1, 0.231373)
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_voysa")
+animation = &"smoke"
+frame = 7
+frame_progress = 1.0
+script = ExtResource("2_7no5f")
