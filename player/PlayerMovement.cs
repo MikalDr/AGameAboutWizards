@@ -17,6 +17,8 @@ public partial class PlayerMovement : CharacterBody2D
 	private float DamageTime = 0.1f;
 	[Export]
 	private PackedScene ghostScene;
+	[Export]
+	private PackedScene dashSmoke;
 	
 	private bool isDashing = false;
 	private Vector2 dashDirection = Vector2.Zero;
@@ -149,12 +151,19 @@ public partial class PlayerMovement : CharacterBody2D
 	}
 		
 	private void OnDashDurationTimeout() {
-
+		SpawnGhost();
+		SpawnSmoke();
 	}
 	private void OnDashCooldownTimeout() {
 		
 	}
 	private void OnGhostTimerTimeout()
+	{
+		SpawnGhost();
+		SpawnSmoke();
+	}
+
+	private void SpawnGhost()
 	{
 		var ghost = ghostScene.Instantiate<dashGhost>();
 		GetParent().AddChild(ghost);
@@ -171,9 +180,14 @@ public partial class PlayerMovement : CharacterBody2D
 		ImageTexture frozenTexture = ImageTexture.CreateFromImage(image);
 
 		ghost.Texture = frozenTexture;
+		
 	}
-
-
+	
+	private void SpawnSmoke() {
+		var smoke = dashSmoke.Instantiate<DashSmoke>();
+		GetParent().AddChild(smoke);
+		smoke.GlobalPosition = GlobalPosition;
+	}
 	
 	private void OnTakeDamage() {
 		_flashMaterial.SetShaderParameter("flash_red", false);
