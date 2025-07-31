@@ -1,8 +1,9 @@
-[gd_scene load_steps=34 format=3 uid="uid://c78isorfyge6a"]
+[gd_scene load_steps=35 format=3 uid="uid://c78isorfyge6a"]
 
 [ext_resource type="Script" uid="uid://bplgsac67k3j1" path="res://player/PlayerMovement.cs" id="1_rkbax"]
 [ext_resource type="Shader" uid="uid://qxo1w80i8yww" path="res://player/DashFlash.gdshader" id="2_g1dw6"]
 [ext_resource type="Texture2D" uid="uid://b52ait0my3mch" path="res://player/WizardTest-Sheet.png" id="2_rkbax"]
+[ext_resource type="PackedScene" uid="uid://2i1s8rgax0pj" path="res://player/dashGhost.tscn" id="2_yw30f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yw30f"]
 shader = ExtResource("2_g1dw6")
@@ -239,6 +240,7 @@ height = 24.0
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_rkbax")
 Acceleration = 1200.0
+ghostScene = ExtResource("2_yw30f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -257,12 +259,3 @@ position_smoothing_speed = 10.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 23)
 shape = SubResource("CapsuleShape2D_rkbax")
-
-[node name="DashDuration" type="Timer" parent="."]
-one_shot = true
-
-[node name="DashCooldown" type="Timer" parent="."]
-one_shot = true
-
-[connection signal="timeout" from="DashDuration" to="." method="_on_dash_duration_timeout"]
-[connection signal="timeout" from="DashCooldown" to="." method="_on_dash_cooldown_timeout"]

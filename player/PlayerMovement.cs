@@ -8,21 +8,25 @@ public partial class PlayerMovement : CharacterBody2D
 	[Export]
 	private float DashSpeed = 800;
 	[Export]
-	private float DashDuration = 0.2f;
+	private float DashDuration = .2f;
 	[Export]
 	private float DashCooldown = 2f;
 	[Export]
 	private float Acceleration = 5000f;
 	[Export]
 	private float DamageTime = 0.1f;
+	[Export]
+	private PackedScene ghostScene;
 	
 	private bool isDashing = false;
+	private Vector2 dashDirection = Vector2.Zero;
 	
 	private int Health = 100;
 	
 	private Timer dashCooldownTimer;
 	private Timer dashDurationTimer;
 	private Timer damageTimer;
+	private Timer ghostTimer;	
 	
 	private AnimatedSprite2D _anim;
 	private ShaderMaterial _flashMaterial;
@@ -47,9 +51,27 @@ public partial class PlayerMovement : CharacterBody2D
 		_flashMaterial = (ShaderMaterial)_anim.Material;
 		
 		// Dash Timers
-		dashCooldownTimer = GetNode<Timer>("DashCooldown");
-		dashDurationTimer = GetNode<Timer>("DashDuration");
+		dashCooldownTimer = new Timer();
+		dashDurationTimer = new Timer();
+		ghostTimer = new Timer();
 		damageTimer = new Timer();
+		
+		AddChild(dashCooldownTimer);
+		AddChild(dashDurationTimer);
+		AddChild(ghostTimer);
+		AddChild(damageTimer);
+		
+		dashCooldownTimer.WaitTime = DashCooldown;
+		dashDurationTimer.WaitTime = DashDuration;
+		damageTimer.WaitTime = DamageTime;
+		ghostTimer.WaitTime = DashDuration/4f;
+		
+		dashCooldownTimer.OneShot = true;
+		dashDurationTimer.OneShot = true;
+		ghostTimer.OneShot = false;
+		damageTimer.OneShot = true;
+		
+		ghostTimer.Timeout += OnGhostTimerTimeout;
 		damageTimer.Timeout += OnTakeDamage;
 		dashCooldownTimer.Timeout += OnDashCooldownTimeout;
 		dashDurationTimer.Timeout += OnDashDurationTimeout;
@@ -70,7 +92,19 @@ public partial class PlayerMovement : CharacterBody2D
 			}
 			
 			// Movement Code
-			if (inputDirection != Vector2.Zero)
+			if (isDashing)
+				{
+					if (dashDurationTimer.IsStopped())
+					{
+						isDashing = false;
+						ghostTimer.Stop();
+						_flashMaterial.SetShaderParameter("flash_white", false);
+					} else {
+						Velocity = DashSpeed * dashDirection;
+						_flashMaterial.SetShaderParameter("flash_white", true);
+					}
+				}
+			else if (inputDirection != Vector2.Zero)
 			{
 				inputDirection = inputDirection.Normalized();
 				
@@ -78,17 +112,11 @@ public partial class PlayerMovement : CharacterBody2D
 				{
 					dashCooldownTimer.Start(DashCooldown);
 					dashDurationTimer.Start(DashDuration);
-					Velocity = DashSpeed * inputDirection;
+					dashDirection = inputDirection;
+					Velocity = DashSpeed * dashDirection;
 					isDashing = true;
+					ghostTimer.Start();
 				} 
-				else if (isDashing)
-				{
-					_flashMaterial.SetShaderParameter("flash_white", true);
-					if (dashDurationTimer.IsStopped())
-					{
-						isDashing = false; 
-					}
-				}
 				 else {
 					_flashMaterial.SetShaderParameter("flash_white", false);
 					Velocity = Velocity.MoveToward(inputDirection * MaxSpeed, Acceleration * (float)delta);
@@ -109,22 +137,44 @@ public partial class PlayerMovement : CharacterBody2D
 			}
 			else
 			{
+				//GD.Print(dashDurationTimer.TimeLeft);
 				Velocity = Vector2.Zero;
 				_anim.Stop();
 				_anim.Animation = "idle";
 			}
 
 		}
-		
+
 		MoveAndSlide();
 	}
 		
 	private void OnDashDurationTimeout() {
-		
+
 	}
 	private void OnDashCooldownTimeout() {
 		
 	}
+	private void OnGhostTimerTimeout()
+	{
+		var ghost = ghostScene.Instantiate<dashGhost>();
+		GetParent().AddChild(ghost);
+
+		ghost.GlobalPosition = GlobalPosition;
+		ghost.FlipH = _anim.FlipH;
+
+		var frames = _anim.SpriteFrames;
+		var currentAnimation = _anim.Animation;
+		var currentFrame = _anim.Frame;
+		var frameTexture = frames.GetFrameTexture(currentAnimation, currentFrame);
+
+		Image image = frameTexture.GetImage();
+		ImageTexture frozenTexture = ImageTexture.CreateFromImage(image);
+
+		ghost.Texture = frozenTexture;
+	}
+
+
+	
 	private void OnTakeDamage() {
 		_flashMaterial.SetShaderParameter("flash_red", false);
 	}
